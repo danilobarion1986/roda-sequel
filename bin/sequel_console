@@ -1,11 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'dotenv'
-Dotenv.load(".env.#{ENV['RACK_ENV'] || :development}")
+require_relative '../config/application'
 
-conn = <<~CONNECTION
-  postgres://#{ENV['DATABASE_USER']}:#{ENV['DATABASE_PASSWORD']}@#{ENV['DATABASE_HOST']}:#{ENV['DATABASE_PORT']}/#{ENV['DATABASE_DB']}
-CONNECTION
-
-system("sequel #{conn}")
+system("sequel #{DATABASE_URL}")
