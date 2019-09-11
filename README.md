@@ -21,3 +21,11 @@ $ gem install bundler -v 1.17.3
 $ bundle install
 $ rackup # Then visit http://localhost:9292
 ```
+
+### TODO
+
+[ ] Verify how to do proper caching  
+[ ] Finish `seeds.rb` code 
+[ ] Create rake task to run `seeds.rb` code
+[ ] Adjust healthcheck model implementation
+[ ] Add tests with rspec
