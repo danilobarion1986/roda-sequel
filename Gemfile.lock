@@ -60,6 +60,7 @@ GEM
     sequel (5.24.0)
     tiny_tds (2.1.2)
     unicode-display_width (1.6.0)
+    zeitwerk (2.1.10)
 
 PLATFORMS
   ruby
@@ -79,6 +80,7 @@ DEPENDENCIES
   rubocop
   sequel
   tiny_tds
+  zeitwerk
 
 BUNDLED WITH
    1.17.3
