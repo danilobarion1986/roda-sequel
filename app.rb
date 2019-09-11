@@ -1,30 +1,63 @@
 # frozen_string_literal: true
 
-require 'roda'
-require 'awesome_print'
-require 'json'
-require 'pathname'
-
 # Roda's routing tree
 class App < Roda
+  # https://github.com/jeremyevans/roda/blob/master/lib/roda/plugins/environments.rb
   plugin :environments
+  plugin :json, classes: [Array, Hash, Sequel::Model]
+  plugin :symbol_matchers
+  plugin :status_handler
+  plugin :error_handler
 
-  # path to your application root.
-  APP_ROOT = Pathname.new(File.expand_path(__dir__))
+  # https://github.com/jeremyevans/roda/blob/master/lib/roda/plugins/match_hook.rb
+  # plugin :match_hook
+
+  error do |e|
+    { error: e.message }
+  end
+  status_handler(403) do
+    'Forbiddend'
+  end
+  status_handler(404) do
+    'Not found'
+  end
 
   route do |r|
-    # GET / request
+    require_relative './domain/domain'
+
     r.root do
       r.redirect '/healthcheck'
     end
 
     r.is 'healthcheck' do
-      { status: :ok }.to_json
+      require_relative './domain/healthcheck'
+      require_relative './models/beneficio'
+
+      Domain::Healthcheck.call
     end
 
-    r.on 'v1/beneficios' do
-      ap matched: r.matched_path, remaining: r.remaining_path
-      { hello: :danilo }.to_json
+    r.on 'v1' do
+      r.on 'beneficios' do
+        require_relative './models/beneficio'
+
+        r.get /(\d+)/ do |beneficio_id|
+          require_relative './domain/beneficios/exibir'
+
+          beneficio = Domain::Beneficios::Exibir.call(beneficio_id)
+          response.status = 404 if beneficio.nil?
+          beneficio
+        end
+
+        r.get do
+          r.on /.*/ do
+            response.status = 404
+            ''
+          end
+
+          require_relative './domain/beneficios/listar'
+          Domain::Beneficios::Listar.call
+        end
+      end
     end
   end
 end
