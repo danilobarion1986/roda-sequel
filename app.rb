@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# Roda's routing tree
 class App < Roda
   # https://github.com/jeremyevans/roda/blob/master/lib/roda/plugins/environments.rb
   plugin :environments
@@ -23,39 +22,26 @@ class App < Roda
   end
 
   route do |r|
-    require_relative './domain/domain'
-
     r.root do
       r.redirect '/healthcheck'
     end
 
     r.is 'healthcheck' do
-      require_relative './domain/healthcheck'
-      require_relative './models/beneficio'
-
       Domain::Healthcheck.call
     end
 
     r.on 'v1' do
       r.on 'beneficios' do
-        require_relative './models/beneficio'
-
-        r.get /(\d+)/ do |beneficio_id|
-          require_relative './domain/beneficios/exibir'
-
+        r.get :d do |beneficio_id|
           beneficio = Domain::Beneficios::Exibir.call(beneficio_id)
           response.status = 404 if beneficio.nil?
           beneficio
         end
 
-        r.get do
-          r.on /.*/ do
-            response.status = 404
-            ''
+        r.is do
+          r.get do
+            Domain::Beneficios::Listar.call
           end
-
-          require_relative './domain/beneficios/listar'
-          Domain::Beneficios::Listar.call
         end
       end
     end
