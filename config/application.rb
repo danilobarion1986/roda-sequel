@@ -7,6 +7,7 @@ Dotenv.load(".env.#{ENV['RACK_ENV'] || :development}")
 
 # path to your application root.
 APP_ROOT = Pathname.new(File.expand_path('..', __dir__))
+TAG_VERSAO = File.readlines(File.join(APP_ROOT, 'versao')).first.chomp
 DATABASE_URL = "postgres://#{ENV['DATABASE_USER']}:#{ENV['DATABASE_PASSWORD']}@#{ENV['DATABASE_HOST']}:#{ENV['DATABASE_PORT']}/#{ENV['DATABASE_DB']}"
 
 require 'sequel'
@@ -16,6 +17,13 @@ Sequel::Model.plugin :json_serializer
 
 require 'pry'
 require 'awesome_print'
+
+# https://github.com/fxn/zeitwerk/blob/master/README.md
+require 'zeitwerk'
+loader = Zeitwerk::Loader.new
+loader.push_dir(APP_ROOT)
+loader.enable_reloading
+loader.setup # ready!
 
 require_relative '../app'
 
