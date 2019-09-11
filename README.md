@@ -24,8 +24,11 @@ $ rackup # Then visit http://localhost:9292
 
 ### TODO
 
-[ ] Verify how to do proper caching  
-[ ] Finish `seeds.rb` code 
-[ ] Create rake task to run `seeds.rb` code
-[ ] Adjust healthcheck model implementation
+[X] Verify how to use zeitwerk for constant auloload
+[X] Finish `seeds.rb` code 
+[X] Create rake task to run `seeds.rb` code
+[X] Adjust healthcheck model implementation
 [ ] Add tests with rspec
+[ ] Verify how to do proper caching  
+[ ] Verify how to organize app code
+[ ] Improve rake tasks for DB, using [this article ideas](https://mrcook.uk/simple-roda-blog-tutorial)
