@@ -56,16 +56,14 @@ class App < Roda
       r.on 'domain' do
         # route: GET /v1/domain/:domain_id
         r.get :d do |domain_id|
-          notify_request do
-            { domain: domain_id }
-          end
+          { domain: Models::YourModel.where(id: domain_id).first || {} }
         end
 
         r.is do
           # route: GET /v1/domain
           r.get do
             @start_time = clock_time
-            { domain: {} }
+            { domain: Models::YourModel.all }
           end
         end
       end

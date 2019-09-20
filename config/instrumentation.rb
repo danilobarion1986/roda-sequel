@@ -9,7 +9,7 @@ Airbrake.configure do |c|
   c.project_id = ENV['AIRBRAKE_PROJECT_ID']
   c.project_key = ENV['AIRBRAKE_API_KEY']
   c.environment = ENV['RACK_ENV']
-  c.app_version = TAG_VERSAO
+  c.app_version = TAG
   c.root_directory = APP_ROOT
   c.performance_stats = true
   c.ignore_environments = %i[test development]

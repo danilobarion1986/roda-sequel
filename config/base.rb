@@ -11,7 +11,7 @@ require 'awesome_print'
 Dotenv.load(".env.#{ENV['RACK_ENV'] || :development}")
 
 APP_ROOT = Pathname.new(File.expand_path('..', __dir__))
-TAG_VERSAO = File.readlines(File.join(APP_ROOT, 'versao')).first.chomp
+TAG = File.readlines(File.join(APP_ROOT, 'versao')).first.chomp
 CONNECTION_OPTIONS = {
   adapter: :tinytds,
   mode: :dblib,
