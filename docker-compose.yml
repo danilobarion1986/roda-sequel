@@ -1,16 +1,15 @@
 version: "2"
 services:
-  db:
-    image: postgres
-    env_file:
-      - .env.test
+  sqlserver:
     environment:
-      POSTGRES_USER: $${DATABASE_HOST}
-      POSTGRES_PASSWORD: $${DATABASE_PASSWORD}
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: ${DATABASE_PASSWORD}
+      MSSQL_MEMORY_LIMIT_MB: 512m
+    image: "microsoft/mssql-server-linux"
     ports:
-      - 5431:5432
+      - ${DATABASE_PORT}:1433
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - sqlserver-data:/var/opt/mssql
 
 volumes:
-  postgres-data:
+  sqlserver-data:

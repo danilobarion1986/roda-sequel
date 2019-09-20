@@ -3,4 +3,4 @@
 
 require_relative '../config/application'
 
-system("sequel #{DATABASE_URL}")
+system("sequel -e #{APP_ROOT}/config/database.yml")

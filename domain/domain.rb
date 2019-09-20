@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
 module Domain
-  module Beneficios
+  module YourMainDomain
   end
 end

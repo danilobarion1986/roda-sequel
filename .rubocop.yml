@@ -1,0 +1,31 @@
+# Gerado pelo comando rubocop --auto-gen-config
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  TargetRubyVersion: '2.6'
+  Exclude:
+    - 'db/**/*'
+    - 'Gemfile'
+    - 'Gemfile.lock'
+    - 'spec/spec_helper.rb'
+
+Style/Documentation:
+  Enabled: false
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  SafeAutoCorrect: true
+  EnforcedStyle: nested
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/ModuleLength:
+  Exclude:
+    - "**/*_spec.rb"
+
+Metrics/BlockLength:
+  Exclude:
+    - "**/*_spec.rb"

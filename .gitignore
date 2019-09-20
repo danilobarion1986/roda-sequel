@@ -1,0 +1,7 @@
+.yardoc
+doc/
+tmp/
+.rbenv-gemsets
+coverage/
+spec/examples.txt
+log/

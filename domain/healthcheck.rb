@@ -2,15 +2,17 @@
 
 require 'benchmark'
 
+# :no-doc:
 module Domain
+  # Class responsible for verify the health of your dependencies
   class Healthcheck
     class << self
       def call
         {
-          versao: 1,
-          tag_versao: TAG_VERSAO,
-          servicos: {
-            banco: try { Models::Beneficio.select(:id).limit(1) }
+          version: 1,
+          git_tag: TAG,
+          services: {
+            database: try { Models::YourMainDomain }
           }
         }
       end
@@ -28,8 +30,11 @@ module Domain
       end
 
       def response_time
-        tempo = Benchmark.realtime { yield }
-        (tempo * 1000).round(2) # conversão do tempo para milisengundos
+        to_milliseconds(Benchmark.realtime { yield })
+      end
+
+      def to_milliseconds(time)
+        (time * 1000).round(2)
       end
     end
   end
