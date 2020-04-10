@@ -5,18 +5,10 @@ source 'https://rubygems.org'
 gem 'puma'
 gem 'rack'
 gem 'roda'
-gem 'rubocop'
 gem 'sequel'
-gem 'rerun'
-gem 'awesome_print'
 gem 'dotenv'
-gem 'pry'
 gem 'rake'
-gem 'rspec'
 gem 'zeitwerk'
-gem 'rubycritic', require: false
-gem 'yard'
-gem 'simplecov', require: false, group: :test
 gem 'dry-schema'
 gem 'pg'
 gem 'sequel_pg'
@@ -29,3 +21,18 @@ gem 'roda-route_list'
 # See usage on https://github.com/3scale/roda-parse-request
 # gem 'roda-parse-request'
 
+group :development, :test do
+  gem 'rubycritic', require: false
+  gem 'yard'
+  gem 'rerun'
+  gem 'awesome_print'
+  gem 'rubocop'
+  gem 'rubocop-performance'
+  gem 'rubocop-rspec'
+  gem 'pry'
+end
+
+group :test do
+  gem 'simplecov', require: false
+  gem 'rspec'
+end
