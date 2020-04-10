@@ -4,34 +4,42 @@ require_relative './config/application'
 
 # Class with the routing tree
 class App < Roda
+  # https://github.com/jeremyevans/roda/blob/master/lib/roda/plugins/environments.rb
   plugin :environments
+
+  # If you need more HTTP verbs than GET/POST
+  plugin :all_verbs
+
+  # For rails-style "*_path" methods and other useful stuff
+  # https://roda.jeremyevans.net/rdoc/classes/Roda/RodaPlugins/Path.html
+  # plugin :path
+
+  # For basic authentication: https://github.com/badosu/roda-basic-auth
+  # plugin :basic_auth
+
   plugin :json, classes: [Array, Hash, Sequel::Model]
   plugin :symbol_matchers
   plugin :error_handler
   plugin :status_handler
   plugin :hooks
   plugin :slash_path_empty
+  plugin :common_logger, $stdout
 
   after do |res|
     if defined?(@start_time)
       request_time = clock_time - @start_time
       puts "[request_time] => #{request_time.round(5)} ms"
     end
-
-    Airbrake.notify_request(
-      method: request.env['REQUEST_METHOD'],
-      route: request.matched_path,
-      status_code: response.status,
-      start_time: Time.now
-    )
   end
+
   error do |e|
-    Airbrake.notify(e)
     { error: e.message }
   end
+
   status_handler(403) do
     'Forbidden'
   end
+
   status_handler(404) do
     'Not Found'
   end
