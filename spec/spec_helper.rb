@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 require 'simplecov'
 SimpleCov.start do
   add_filter ['spec/', 'config/application.rb']
   add_group 'Domain', 'domain/beneficios'
 end
 
+ENV['RACK_ENV'] = 'test'
 require_relative '../config/application'
 
 RSpec.configure do |config|
