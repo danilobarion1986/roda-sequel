@@ -2,68 +2,61 @@
 
 require_relative '../config/base'
 
-desc 'Database related tasks'
+desc 'Tasks relacionadas ao banco de dados'
 namespace :db do
   migrations_path = "#{APP_ROOT}/db/migrations"
+  user = ENV['POSTGRES_USER']
+  db = ENV['POSTGRES_DB']
 
-  desc 'Create the database for given environment'
+  desc 'Cria o banco de dados para o ambiente informado'
   task :create do
-    require 'sequel'
-
-    config = CONNECTION_OPTIONS.dup
-    config[:database] = 'master'
-
-    Sequel.connect(config) do |db|
-      database_name = "your_database_#{ENV['RACK_ENV'] || :development}"
-      db.execute "CREATE DATABASE #{database_name}"
-    end
+    system("docker exec -ti roda_db psql -U #{user} -c 'CREATE DATABASE #{db};'")
   end
 
-  desc 'Drop entire database for given environment'
+  desc 'Exclui o banco de dados para o ambiente informado'
   task :drop do
-    require_relative '../config/sequel'
-
-    Sequel::Model.db.disconnect
-    config = Sequel::Model.db.opts
-    database_name = "[#{config[:database]}]"
-    DB.execute "USE MASTER; DROP DATABASE #{database_name}"
+    system("docker exec -ti roda_db psql -U #{user} -c 'DROP DATABASE #{db};'")
+  rescue StandardError => e
+    puts "Erro => #{e.message}"
   end
 
-  desc 'Run all pending migrations. If you pass `true` to :ignore_missing parameter, it ignores missing migration files'
-  task :migrate, [:ignore_missing] do |t, args|
+  desc 'Executa todas as migrations pendentes. Caso seja informado o parâmetro "true", ignora os arquivos de migrations que estejam faltando'
+  task :migrate, [:ignore_missing] do |_t, args|
     require_relative '../config/sequel'
     Sequel.extension :migration
 
     extra_params = { allow_missing_migration_files: args[:ignore_missing] }.compact
     Sequel::Migrator.run(DB, migrations_path, extra_params)
   rescue Sequel::Migrator::Error => e
-    puts "Error => #{e.message}"
+    puts "Erro => #{e.message}"
   end
 
-  desc 'Reset database for its initial state, running the `down` block of all your migrations'
+  desc 'Reinicia o banco de dados, rodando o bloco "down" de todas as migrations'
   task :reset do
     require_relative '../config/sequel'
     Sequel.extension :migration
 
     Sequel::Migrator.run(DB, migrations_path, target: 0)
   rescue Sequel::Migrator::Error => e
-    puts "Error => #{e.message}"
+    puts "Erro => #{e.message}"
   end
 
-  desc 'Populate your database with the data contained in the "db/seeds.rb" file'
+  desc 'Popula o banco de dados com o arquivo "db/seeds.rb"'
   task :seed do
     require_relative '../config/sequel'
 
     Db::Seeds.call
   rescue StandardError => e
-    puts "Error => #{e.message}"
+    puts "Erro => #{e.message}"
   end
 
-  desc 'Run all migrations and populate your database with the data contained in the "db/seeds.rb" file'
+  desc 'Realiza o setup do banco de dados (migrate && seed)'
   task :setup do
+    Rake::Task['db:drop'].execute
+    Rake::Task['db:create'].execute
     Rake::Task['db:migrate'].execute
     Rake::Task['db:seed'].execute
   rescue StandardError => e
-    puts "Error => #{e.message}"
+    puts "Erro => #{e.message}"
   end
 end
