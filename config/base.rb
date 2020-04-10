@@ -21,4 +21,4 @@ CONNECTION_OPTIONS = YAML.safe_load(ERB.new(File.read(database_yml)).result)[ENV
 loader = Zeitwerk::Loader.new
 loader.push_dir(APP_ROOT)
 loader.enable_reloading
-loader.setup # ready!
+loader.setup

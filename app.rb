@@ -25,7 +25,7 @@ class App < Roda
   plugin :slash_path_empty
   plugin :common_logger, $stdout
 
-  after do |res|
+  after do |_res|
     if defined?(@start_time)
       request_time = clock_time - @start_time
       puts "[request_time] => #{request_time.round(5)} ms"

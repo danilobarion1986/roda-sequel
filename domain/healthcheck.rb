@@ -4,7 +4,7 @@ require 'benchmark'
 
 # :no-doc:
 module Domain
-  # Class responsible for verify the health of your dependencies
+  # Class responsible for verify the health of the application and its dependencies
   class Healthcheck
     class << self
       def call

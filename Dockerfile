@@ -11,7 +11,7 @@ RUN apk update && \
 
 WORKDIR /usr/src/app
 
-RUN gem install bundler -v 1.17.3
+RUN gem install bundler
 
 COPY Gemfile Gemfile.lock ./
 
