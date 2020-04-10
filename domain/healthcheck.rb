@@ -10,7 +10,7 @@ module Domain
       def call
         {
           version: 1,
-          git_tag: TAG,
+          git_tag: GIT_TAG,
           services: {
             database: try { Models::YourModel.count }
           }

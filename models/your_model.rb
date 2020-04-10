@@ -2,7 +2,7 @@
 
 # :no-doc:
 module Models
-  # Model for "your_table"
-  class YourModel < Sequel::Model(:your_table)
+  # Model for "first_table"
+  class YourModel < Sequel::Model(:first_table)
   end
 end

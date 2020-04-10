@@ -1,15 +1,15 @@
-version: "2"
+version: "3"
+
 services:
-  sqlserver:
-    environment:
-      ACCEPT_EULA: "Y"
-      SA_PASSWORD: ${DATABASE_PASSWORD}
-      MSSQL_MEMORY_LIMIT_MB: 512m
-    image: "microsoft/mssql-server-linux"
+  database:
+    image: postgres
+    env_file:
+      - .env
     ports:
-      - ${DATABASE_PORT}:1433
+      - 5432:5432
     volumes:
-      - sqlserver-data:/var/opt/mssql
+      - ./config/db:/var/lib/postgresql/config/db
+    container_name: roda_db
 
 volumes:
-  sqlserver-data:
+  postgres-data:

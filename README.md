@@ -15,43 +15,56 @@ Para o ambiente de desenvolvimento e testes você vai precisar de:
 * [Bundler](http://bundler.io/)
 * [Docker](https://www.docker.com/)
 * [docker-compose](https://docs.docker.com/compose/)
-* FreeTDS: `sudo apt-get install freetds-dev` OU `brew install freetds`
+* [PostgreSQL](https://www.postgresql.org/download/)
 
-## Setup e execução da aplicação
+## Setup da aplicação
 
 ```bash
 $ bundle
+```
+
+## Execução da aplicação
+
+Se for subir a aplicação apontando para o banco local, executar os seguintes comandos:
+
+```bash
+$ docker-compose up -d database
+$ RACK_ENV=development bundle exec rake db:setup
+```
+
+> Cuidado ao executar comandos de banco de dados quando estiver apontando para o ambiente de QA/Produção, pois estes podem gerar perda de dados ou inconsistências diversas.
+
+Executando a aplicação:
+
+```bash
 $ rerun "rackup -p 3000"
 ```
 
 ## Testes
 
-A dependência para rodar os testes é o RDBMS SQL Server. Para rodar uma instância do serviço, 
-execute o comando:
+A dependência para rodar os testes é o PostgreSQL. Para rodar uma instância dele execute o comando:
 
 ```
-docker-compose up -d sqlserver
+docker-compose up -d database
 ```
 
 ### Preparando o ambiente de testes
 
-Para rodar os testes é preciso criar o banco de dados com as tabelas necessárias.
+Para rodar os testes é preciso criar o banco de dados com as tabelas e informações necessárias.
 Se estiver rodando o banco com docker, as configurações do arquivo `.env` devem
-ser iguais a do arquivo `.env.<environment>`, conforme o ambiente que você definir 
-pra variável `RACK_ENV`.
+ser iguais a do arquivo `.env.test`.
 
 Execute o comando:
 
 ```bash
-$ RACK_ENV=<environment> bundle exec rake db:create db:setup
+$ RACK_ENV=test bundle exec rake db:setup
 ```
 
 Isto irá criar o banco, rodar as migrations e popular com as informações iniciais.
 
 ### Executando os testes
 
-Os testes podem ser executados com os comandos `RACK_ENV=test bundle exec rspec` ou `rake`, 
-conforme sua preferência.
+Os testes podem ser executados com o comando `bundle exec rspec`.
 
 ### Cobertura dos testes
 
@@ -109,13 +122,6 @@ Após a criação, no endereço `http://localhost:8808/` será possível navegar
 
 Veja [aqui](http://www.rubydoc.info/gems/yard/file/docs/GettingStarted.md) mais detalhes sobre como 
 usar o Yard para documentar seu código.
-
-## TODO's
-- [X] Adicionar instrumentação com [NewRelic](https://github.com/Pathgather/newrelic-roda)
-- [X] Melhorar as rake tasks usando [este artigo](https://mrcook.uk/simple-roda-blog-tutorial) como sugestão
-- [X] Verificar como listar as rotas existentes (Usando [esta gem](https://github.com/jeremyevans/roda-route_list))
-- [ ] Verificar como fazer cache dos retornos
-- [ ] Organizar as rotas em arquivos separados (?)
 
 ## Contribuição
 1. Clone o projeto!
